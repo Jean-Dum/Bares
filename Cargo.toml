@@ -1,0 +1,123 @@
+[package]
+name = "app"
+categories = ["embedded", "no-std"]
+authors = ["Per Lindgren <per.lindgren@ltu.se>"]
+description = "Example project (app)"
+keywords = ["arm", "cortex-m", "rtfm", "e7020e"]
+license = "MIT OR Apache-2.0"
+repository = "https://gitlab.henriktjader.com/pln/e7020e_2020"
+version = "0.1.0"
+edition = "2018"
+
+[dependencies]
+panic-halt              = "0.2"
+panic-semihosting       = "0.5" # comment out for `cargo doc`
+panic-itm               = "0.4.1" # comment out for `cargo doc`
+cortex-m-semihosting    = "0.3.5"
+aligned                 = "0.3.2"
+ufmt                    = "0.1.0"
+nb                      = "0.1.2"
+heapless = "0.5.3"
+
+[dependencies.cortex-m]
+version         = "0.6.2"
+features        = ["inline-asm"] # <- currently requires nightly compiler
+
+[dependencies.cortex-m-rt]
+version         = "0.6.12"
+
+[dependencies.stm32f4]
+version         = "0.9.0"
+features        = ["stm32f401", "rt"]
+optional        = true
+
+[dependencies.stm32f4xx-hal]
+version         = "0.6.0"
+features        = ["stm32f401", "rt"]
+optional        = true
+
+[dependencies.cortex-m-rtfm]
+version         = "0.5.1"
+optional        = true
+
+[features]
+rtfm            = ["cortex-m-rtfm", "stm32f4xx-hal"]
+
+# this lets you use `cargo fix`!
+[[bin]]
+name            = "app"
+test            = false
+bench           = false
+
+# Built options for different examples
+[[example]]
+name                = "device"
+required-features   = ["stm32f4"]
+
+[[example]]
+name                = "bare6"
+required-features   = ["stm32f4"]
+
+[[example]]
+name                = "serial"
+required-features   = ["stm32f4xx-hal"]
+
+[[example]]
+name                = "bare7"
+required-features   = ["stm32f4xx-hal"]
+
+[[example]]
+name                = "bare8"
+required-features   = ["rtfm"]
+
+[[example]]
+name                = "bare9"
+required-features   = ["rtfm"]
+
+[[example]]
+name                = "bare10"
+required-features   = ["rtfm"]
+
+[[example]]
+name                = "rtfm_itm"
+required-features   = ["rtfm"]
+[[example]]
+name                = "rtfm_itm_spawn"
+required-features   = ["rtfm"]
+
+[[example]]
+name                = "rtfm_schedule"
+required-features   = ["rtfm"]
+
+[[example]]
+name                = "rtfm_blinky"
+required-features   = ["rtfm"]
+
+[[example]]
+name                = "rtfm_blinky_msg1"
+required-features   = ["rtfm"]
+
+[[example]]
+name                = "rtfm_blinky_msg2"
+required-features   = ["rtfm"]
+
+[[example]]
+name                = "rtfm_blinky_msg3"
+required-features   = ["rtfm"]
+
+[[example]]
+name                = "rtfm_blinky_sw_reset"
+required-features   = ["rtfm"]
+
+# for more info see, https://doc.rust-lang.org/rustc/codegen-options/index.html
+[profile.dev]
+# opt-level       = 1 # better optimization (may optimize out symbols)
+# codegen-units   = 16
+debug           = true
+lto             = false
+
+[profile.release]
+#opt-level       = "s"   # optimize for size
+codegen-units   = 1     # better optimizations
+debug           = true  # symbols are nice and they don't increase the size on Flash
+lto             = true  # better optimizations
